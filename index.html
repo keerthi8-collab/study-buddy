@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>StudyBuddy Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#07070f;--s1:#0f0f1a;--s2:#161625;--s3:#1e1e30;
+  --bd:#2a2a42;--bd2:#3a3a55;
+  --acc:#7c6dfa;--acc2:#fa6d8f;--acc3:#6dfabd;--acc4:#fabd6d;
+  --txt:#e8e8f8;--mut:#6b6b90;
+  --beg:#6dfabd;--int:#7c6dfa;--exp:#fa6d8f;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+
+/* ── Top nav ── */
+.topnav{display:flex;align-items:center;gap:0;border-bottom:1px solid var(--bd);background:var(--s1);flex-shrink:0;}
+.logo{display:flex;align-items:center;gap:10px;padding:14px 24px;border-right:1px solid var(--bd);}
+.logo-box{width:32px;height:32px;background:linear-gradient(135deg,var(--acc),var(--acc2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.logo-txt{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;}
+.logo-badge{font-size:9px;font-family:'DM Mono',monospace;background:var(--acc);color:#fff;padding:2px 6px;border-radius:4px;margin-left:4px;}
+.nav-tabs{display:flex;flex:1;}
+.nav-tab{padding:16px 20px;font-size:13px;font-family:'DM Mono',monospace;color:var(--mut);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;border:none;background:none;}
+.nav-tab:hover{color:var(--txt);}
+.nav-tab.active{color:var(--acc);border-bottom:2px solid var(--acc);}
+.nav-right{display:flex;align-items:center;gap:12px;padding:0 20px;margin-left:auto;}
+.streak-badge{display:flex;align-items:center;gap:6px;font-size:12px;font-family:'DM Mono',monospace;background:var(--s2);border:1px solid var(--bd);border-radius:20px;padding:6px 12px;}
+.ollama-pill{font-size:11px;font-family:'DM Mono',monospace;padding:4px 12px;border-radius:20px;border:1px solid var(--acc3);color:var(--acc3);display:flex;align-items:center;gap:5px;}
+.dot-pulse{width:6px;height:6px;border-radius:50%;background:var(--acc3);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+/* ── Layout ── */
+.workspace{display:flex;flex:1;overflow:hidden;}
+.sidebar{width:260px;background:var(--s1);border-right:1px solid var(--bd);display:flex;flex-direction:column;padding:16px;gap:16px;overflow-y:auto;flex-shrink:0;}
+.content{flex:1;overflow:hidden;display:flex;flex-direction:column;}
+
+/* ── Sidebar widgets ── */
+.sw-label{font-size:10px;font-family:'DM Mono',monospace;color:var(--mut);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;}
+.level-btn{background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .2s;font-family:'DM Sans',sans-serif;color:var(--txt);font-size:13px;text-align:left;width:100%;margin-bottom:6px;}
+.level-btn:hover{border-color:var(--acc);}
+.level-btn.active[data-level="beginner"]{border-color:var(--beg);background:rgba(109,250,189,.08);}
+.level-btn.active[data-level="intermediate"]{border-color:var(--int);background:rgba(124,109,250,.08);}
+.level-btn.active[data-level="expert"]{border-color:var(--exp);background:rgba(250,109,143,.08);}
+.ldot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+[data-level="beginner"] .ldot{background:var(--beg);}
+[data-level="intermediate"] .ldot{background:var(--int);}
+[data-level="expert"] .ldot{background:var(--exp);}
+.linfo .lname{font-weight:500;font-size:12px;}
+.linfo .ldesc{font-size:10px;color:var(--mut);margin-top:1px;}
+
+.style-bar{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:10px 12px;}
+.style-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.style-row:last-child{margin-bottom:0;}
+.style-name{font-size:11px;font-family:'DM Mono',monospace;color:var(--mut);width:70px;flex-shrink:0;}
+.style-track{flex:1;height:4px;background:var(--bd);border-radius:2px;overflow:hidden;}
+.style-fill{height:100%;border-radius:2px;background:var(--acc);transition:width .5s;}
+.style-val{font-size:11px;font-family:'DM Mono',monospace;color:var(--mut);width:20px;text-align:right;}
+
+.gap-list{display:flex;flex-direction:column;gap:5px;max-height:140px;overflow-y:auto;}
+.gap-item{font-size:11px;font-family:'DM Mono',monospace;background:rgba(250,109,143,.08);border:1px solid rgba(250,109,143,.25);border-radius:6px;padding:5px 8px;color:var(--acc2);cursor:pointer;transition:all .2s;}
+.gap-item:hover{background:rgba(250,109,143,.15);}
+
+.topic-tags{display:flex;flex-wrap:wrap;gap:4px;max-height:100px;overflow-y:auto;}
+.topic-tag{font-size:10px;font-family:'DM Mono',monospace;background:var(--s3);border:1px solid var(--bd);border-radius:4px;padding:3px 7px;color:var(--mut);}
+.topic-tag.new{border-color:var(--acc3);color:var(--acc3);animation:tagIn .3s ease;}
+@keyframes tagIn{from{opacity:0;transform:scale(.9);}to{opacity:1;transform:scale(1);}}
+
+.reset-btn{margin-top:auto;background:transparent;border:1px solid var(--bd);border-radius:8px;padding:9px;color:var(--mut);font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;transition:all .2s;width:100%;}
+.reset-btn:hover{border-color:var(--acc2);color:var(--acc2);}
+
+/* ── Tab panels ── */
+.tab-panel{display:none;flex:1;overflow:hidden;flex-direction:column;}
+.tab-panel.active{display:flex;}
+
+/* ── Chat ── */
+.chat-area{flex:1;overflow-y:auto;padding:24px 32px;display:flex;flex-direction:column;gap:20px;scroll-behavior:smooth;}
+.welcome{margin:auto;text-align:center;max-width:500px;animation:fadeUp .6s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.welcome-icon{font-size:52px;display:block;margin-bottom:16px;}
+.welcome h2{font-family:'Syne',sans-serif;font-weight:700;font-size:26px;margin-bottom:10px;background:linear-gradient(135deg,var(--acc),var(--acc2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.welcome p{color:var(--mut);font-size:14px;line-height:1.7;margin-bottom:24px;}
+.chips{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;}
+.chip{background:var(--s2);border:1px solid var(--bd);border-radius:16px;padding:7px 14px;font-size:12px;cursor:pointer;transition:all .2s;color:var(--txt);}
+.chip:hover{border-color:var(--acc);color:var(--acc);transform:translateY(-1px);}
+
+.msg{display:flex;flex-direction:column;gap:6px;animation:fadeUp .35s ease;max-width:780px;}
+.msg.user{align-items:flex-end;align-self:flex-end;}
+.msg.bot{align-items:flex-start;align-self:flex-start;}
+.msg-meta{font-size:10px;font-family:'DM Mono',monospace;color:var(--mut);display:flex;align-items:center;gap:6px;}
+.lvl-badge{padding:2px 7px;border-radius:8px;font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;}
+.lvl-beg{background:rgba(109,250,189,.15);color:var(--beg);}
+.lvl-int{background:rgba(124,109,250,.15);color:var(--int);}
+.lvl-exp{background:rgba(250,109,143,.15);color:var(--exp);}
+.confused-badge{background:rgba(250,189,109,.15);color:var(--acc4);font-size:10px;font-family:'DM Mono',monospace;padding:2px 8px;border-radius:6px;}
+.bubble{padding:14px 18px;border-radius:14px;font-size:13px;line-height:1.8;max-width:680px;}
+.msg.user .bubble{background:var(--acc);color:#fff;border-bottom-right-radius:3px;font-weight:500;}
+.msg.bot .bubble{background:var(--s2);border:1px solid var(--bd);border-bottom-left-radius:3px;white-space:pre-wrap;}
+.msg.bot.confused .bubble{border-color:var(--acc4);}
+.next-card{background:var(--s2);border:1px solid var(--bd);border-left:3px solid var(--acc3);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--acc3);font-family:'DM Mono',monospace;cursor:pointer;transition:all .2s;max-width:460px;}
+.next-card:hover{background:rgba(109,250,189,.05);transform:translateX(3px);}
+.next-card-lbl{font-size:9px;color:var(--mut);margin-bottom:3px;letter-spacing:1px;text-transform:uppercase;}
+.typing{display:flex;align-items:center;gap:5px;padding:14px 18px;background:var(--s2);border:1px solid var(--bd);border-radius:14px;border-bottom-left-radius:3px;width:fit-content;}
+.typing span{width:6px;height:6px;background:var(--mut);border-radius:50%;animation:bounce 1.2s infinite;}
+.typing span:nth-child(2){animation-delay:.2s;}
+.typing span:nth-child(3){animation-delay:.4s;}
+@keyframes bounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-5px);}}
+
+.input-area{padding:16px 32px 20px;border-top:1px solid var(--bd);background:var(--s1);}
+.input-wrap{display:flex;gap:10px;align-items:flex-end;background:var(--s2);border:1px solid var(--bd);border-radius:12px;padding:10px 14px;transition:border-color .2s;}
+.input-wrap:focus-within{border-color:var(--acc);}
+#concept-input{flex:1;background:transparent;border:none;outline:none;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:14px;resize:none;line-height:1.5;max-height:100px;}
+#concept-input::placeholder{color:var(--mut);}
+.send-btn{width:36px;height:36px;background:var(--acc);border:none;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;color:#fff;font-size:16px;}
+.send-btn:hover:not(:disabled){background:#9585fc;transform:scale(1.05);}
+.send-btn:disabled{opacity:.4;cursor:not-allowed;}
+.input-hint{font-size:10px;color:var(--mut);margin-top:6px;font-family:'DM Mono',monospace;text-align:center;}
+
+/* ── Quiz panel ── */
+.quiz-panel{flex:1;overflow-y:auto;padding:32px;}
+.quiz-header{display:flex;align-items:center;gap:16px;margin-bottom:24px;}
+.quiz-header input{flex:1;background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:10px 14px;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;}
+.quiz-header input:focus{border-color:var(--acc);}
+.btn-primary{background:var(--acc);border:none;border-radius:10px;padding:10px 20px;color:#fff;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;}
+.btn-primary:hover{background:#9585fc;}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed;}
+.quiz-card{background:var(--s2);border:1px solid var(--bd);border-radius:12px;padding:20px;margin-bottom:16px;animation:fadeUp .3s ease;}
+.quiz-q{font-size:14px;font-weight:500;margin-bottom:14px;line-height:1.5;}
+.quiz-opts{display:flex;flex-direction:column;gap:8px;}
+.quiz-opt{background:var(--s3);border:1px solid var(--bd);border-radius:8px;padding:10px 14px;font-size:13px;cursor:pointer;transition:all .2s;text-align:left;color:var(--txt);font-family:'DM Sans',sans-serif;}
+.quiz-opt:hover:not(:disabled){border-color:var(--acc);background:rgba(124,109,250,.08);}
+.quiz-opt.correct{border-color:var(--beg);background:rgba(109,250,189,.1);color:var(--beg);}
+.quiz-opt.wrong{border-color:var(--exp);background:rgba(250,109,143,.1);color:var(--exp);}
+.quiz-opt:disabled{cursor:default;}
+.quiz-score{font-family:'DM Mono',monospace;font-size:13px;color:var(--acc3);margin-top:16px;}
+.quiz-empty{color:var(--mut);font-size:14px;text-align:center;margin-top:80px;}
+
+/* ── Knowledge Graph panel ── */
+.graph-panel{flex:1;overflow:hidden;position:relative;}
+#graph-canvas{width:100%;height:100%;}
+.graph-empty{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--mut);font-size:14px;text-align:center;}
+.graph-legend{position:absolute;bottom:20px;left:20px;background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:10px 14px;font-size:11px;font-family:'DM Mono',monospace;color:var(--mut);}
+
+/* ── Whiteboard panel ── */
+.whiteboard-panel{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.wb-toolbar{padding:16px 24px;border-bottom:1px solid var(--bd);display:flex;gap:10px;align-items:center;}
+.wb-toolbar input{flex:1;background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px 12px;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;}
+.wb-toolbar input:focus{border-color:var(--acc);}
+.wb-canvas{flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-wrap:wrap;gap:14px;align-content:flex-start;}
+.wb-note{background:var(--s2);border:1px solid var(--bd);border-radius:12px;padding:16px;width:220px;min-height:140px;display:flex;flex-direction:column;gap:8px;animation:fadeUp .3s ease;position:relative;}
+.wb-note-topic{font-size:10px;font-family:'DM Mono',monospace;color:var(--acc);text-transform:uppercase;letter-spacing:1px;}
+.wb-note-text{font-size:13px;line-height:1.6;color:var(--txt);flex:1;white-space:pre-wrap;}
+.wb-note-del{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--mut);cursor:pointer;font-size:14px;transition:color .2s;}
+.wb-note-del:hover{color:var(--acc2);}
+.wb-area{flex:1;background:transparent;border:none;outline:none;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:13px;resize:none;line-height:1.6;}
+.wb-area::placeholder{color:var(--mut);}
+
+/* ── Stats panel ── */
+.stats-panel{flex:1;overflow-y:auto;padding:28px 32px;}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:28px;}
+.stat-card{background:var(--s2);border:1px solid var(--bd);border-radius:12px;padding:18px;}
+.stat-icon{font-size:24px;margin-bottom:10px;}
+.stat-val{font-family:'Syne',sans-serif;font-size:28px;font-weight:700;color:var(--txt);}
+.stat-lbl{font-size:11px;font-family:'DM Mono',monospace;color:var(--mut);margin-top:3px;}
+.stat-sub{font-size:11px;color:var(--acc3);margin-top:4px;font-family:'DM Mono',monospace;}
+.section-title{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;margin-bottom:14px;color:var(--txt);}
+.confusion-list{display:flex;flex-direction:column;gap:8px;}
+.conf-item{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;}
+.conf-topic{font-size:13px;font-family:'DM Mono',monospace;}
+.conf-count{font-size:12px;font-family:'DM Mono',monospace;color:var(--acc2);background:rgba(250,109,143,.12);padding:2px 8px;border-radius:10px;}
+.style-radar{background:var(--s2);border:1px solid var(--bd);border-radius:12px;padding:18px;margin-bottom:20px;}
+.style-radar-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.style-radar-row:last-child{margin-bottom:0;}
+.sr-name{font-size:12px;font-family:'DM Mono',monospace;color:var(--mut);width:100px;}
+.sr-bar{flex:1;height:8px;background:var(--bd);border-radius:4px;overflow:hidden;}
+.sr-fill{height:100%;border-radius:4px;transition:width .6s;}
+.sr-fill.visual{background:var(--acc3);}
+.sr-fill.analytical{background:var(--acc);}
+.sr-fill.example_based{background:var(--acc4);}
+.sr-fill.storytelling{background:var(--acc2);}
+.sr-val{font-size:12px;font-family:'DM Mono',monospace;color:var(--mut);width:24px;text-align:right;}
+
+/* scrollbar */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--bd);border-radius:4px;}
+</style>
+</head>
+<body>
+
+<!-- Top Nav -->
+<nav class="topnav">
+  <div class="logo">
+    <div class="logo-box">📚</div>
+    <span class="logo-txt">StudyBuddy</span>
+    <span class="logo-badge">PRO</span>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('chat')">💬 Chat</button>
+    <button class="nav-tab" onclick="switchTab('quiz')">🧪 Quiz</button>
+    <button class="nav-tab" onclick="switchTab('graph')">🕸 Knowledge Graph</button>
+    <button class="nav-tab" onclick="switchTab('whiteboard')">🖊 Whiteboard</button>
+    <button class="nav-tab" onclick="switchTab('stats')">📊 Stats</button>
+  </div>
+  <div class="nav-right">
+    <div class="streak-badge">🔥 <span id="streak-count">0</span> day streak</div>
+    <div class="ollama-pill"><div class="dot-pulse"></div>Ollama</div>
+  </div>
+</nav>
+
+<!-- Workspace -->
+<div class="workspace">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div>
+      <div class="sw-label">Difficulty</div>
+      <button class="level-btn" data-level="beginner" onclick="setLevel('beginner')">
+        <div class="ldot"></div>
+        <div class="linfo"><div class="lname">Beginner</div><div class="ldesc">Simple analogies</div></div>
+      </button>
+      <button class="level-btn active" data-level="intermediate" onclick="setLevel('intermediate')">
+        <div class="ldot"></div>
+        <div class="linfo"><div class="lname">Intermediate</div><div class="ldesc">Some depth</div></div>
+      </button>
+      <button class="level-btn" data-level="expert" onclick="setLevel('expert')">
+        <div class="ldot"></div>
+        <div class="linfo"><div class="lname">Expert</div><div class="ldesc">Technical precision</div></div>
+      </button>
+    </div>
+
+    <div>
+      <div class="sw-label">Learning Style</div>
+      <div class="style-bar">
+        <div class="style-row"><span class="style-name">Visual</span><div class="style-track"><div class="style-fill" id="sf-visual" style="width:0%"></div></div><span class="style-val" id="sv-visual">0</span></div>
+        <div class="style-row"><span class="style-name">Analytical</span><div class="style-track"><div class="style-fill" id="sf-analytical" style="width:0%"></div></div><span class="style-val" id="sv-analytical">0</span></div>
+        <div class="style-row"><span class="style-name">Examples</span><div class="style-track"><div class="style-fill" id="sf-example_based" style="width:0%"></div></div><span class="style-val" id="sv-example_based">0</span></div>
+        <div class="style-row"><span class="style-name">Story</span><div class="style-track"><div class="style-fill" id="sf-storytelling" style="width:0%"></div></div><span class="style-val" id="sv-storytelling">0</span></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="sw-label">Knowledge Gaps</div>
+      <div class="gap-list" id="gap-list"><div style="font-size:11px;color:var(--mut);font-family:'DM Mono',monospace;">None detected</div></div>
+    </div>
+
+    <div>
+      <div class="sw-label">Topics Covered</div>
+      <div class="topic-tags" id="topic-tags"><div style="font-size:11px;color:var(--mut);font-family:'DM Mono',monospace;">None yet</div></div>
+    </div>
+
+    <button class="reset-btn" onclick="resetSession()">↺ Reset Session</button>
+  </aside>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- CHAT TAB -->
+    <div class="tab-panel active" id="tab-chat">
+      <div class="chat-area" id="chat-area">
+        <div class="welcome" id="welcome">
+          <span class="welcome-icon">🧠</span>
+          <h2>What do you want to learn?</h2>
+          <p>Ask any concept. I'll explain it at your level, track what you know, detect confusion, and guide your learning path.</p>
+          <div class="chips">
+            <div class="chip" onclick="quickAsk('Linked Lists')">Linked Lists</div>
+            <div class="chip" onclick="quickAsk('Photosynthesis')">Photosynthesis</div>
+            <div class="chip" onclick="quickAsk('Newton Laws')">Newton's Laws</div>
+            <div class="chip" onclick="quickAsk('Binary Search')">Binary Search</div>
+            <div class="chip" onclick="quickAsk('Recursion')">Recursion</div>
+            <div class="chip" onclick="quickAsk('Machine Learning')">Machine Learning</div>
+            <div class="chip" onclick="quickAsk('Quantum Computing')">Quantum Computing</div>
+            <div class="chip" onclick="quickAsk('DNA Replication')">DNA Replication</div>
+          </div>
+        </div>
+      </div>
+      <div class="input-area">
+        <div class="input-wrap">
+          <textarea id="concept-input" rows="1" placeholder="Ask about any concept... or say 'I'm confused about X'" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+          <button class="send-btn" id="send-btn" onclick="sendMessage()">➤</button>
+        </div>
+        <div class="input-hint">Enter to send · Shift+Enter new line</div>
+      </div>
+    </div>
+
+    <!-- QUIZ TAB -->
+    <div class="tab-panel" id="tab-quiz">
+      <div class="quiz-panel">
+        <div class="quiz-header">
+          <input id="quiz-concept" placeholder="Enter concept to quiz on... e.g. Recursion" onkeydown="if(event.key==='Enter')generateQuiz()"/>
+          <button class="btn-primary" id="quiz-btn" onclick="generateQuiz()">Generate Quiz</button>
+        </div>
+        <div id="quiz-content"><div class="quiz-empty">Enter a concept above and click Generate Quiz.<br/>Questions will appear here.</div></div>
+      </div>
+    </div>
+
+    <!-- GRAPH TAB -->
+    <div class="tab-panel" id="tab-graph">
+      <div class="graph-panel">
+        <canvas id="graph-canvas"></canvas>
+        <div class="graph-empty" id="graph-empty">Study some concepts in the Chat tab first.<br/>Your knowledge graph will appear here.</div>
+        <div class="graph-legend">● Studied topic &nbsp; ○ Related (not yet studied)</div>
+      </div>
+    </div>
+
+    <!-- WHITEBOARD TAB -->
+    <div class="tab-panel" id="tab-whiteboard">
+      <div class="whiteboard-panel">
+        <div class="wb-toolbar">
+          <input id="wb-topic" placeholder="Topic label..."/>
+          <textarea id="wb-note-input" style="flex:2;background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px 12px;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;resize:none;height:38px;" placeholder="Write your note..."></textarea>
+          <button class="btn-primary" onclick="addNote()">Add Note</button>
+        </div>
+        <div class="wb-canvas" id="wb-canvas">
+          <div style="width:100%;text-align:center;color:var(--mut);font-size:13px;margin-top:60px;">Your whiteboard is empty.<br/>Add notes above or they'll be auto-added as you study.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS TAB -->
+    <div class="tab-panel" id="tab-stats">
+      <div class="stats-panel">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-icon">🔥</div><div class="stat-val" id="st-streak">0</div><div class="stat-lbl">Day Streak</div><div class="stat-sub" id="st-longest">Longest: 0</div></div>
+          <div class="stat-card"><div class="stat-icon">📖</div><div class="stat-val" id="st-topics">0</div><div class="stat-lbl">Topics Covered</div></div>
+          <div class="stat-card"><div class="stat-icon">🧪</div><div class="stat-val" id="st-quizzes">0</div><div class="stat-lbl">Quizzes Taken</div></div>
+          <div class="stat-card"><div class="stat-icon">⚠</div><div class="stat-val" id="st-gaps">0</div><div class="stat-lbl">Knowledge Gaps</div></div>
+          <div class="stat-card"><div class="stat-icon">🎨</div><div class="stat-val" id="st-style">—</div><div class="stat-lbl">Learning Style</div></div>
+          <div class="stat-card"><div class="stat-icon">🖊</div><div class="stat-val" id="st-notes">0</div><div class="stat-lbl">Whiteboard Notes</div></div>
+        </div>
+
+        <div class="section-title">Learning Style Breakdown</div>
+        <div class="style-radar" id="stats-style-radar">
+          <div class="style-radar-row"><span class="sr-name">Visual</span><div class="sr-bar"><div class="sr-fill visual" id="sr-visual" style="width:0%"></div></div><span class="sr-val" id="srv-visual">0</span></div>
+          <div class="style-radar-row"><span class="sr-name">Analytical</span><div class="sr-bar"><div class="sr-fill analytical" id="sr-analytical" style="width:0%"></div></div><span class="sr-val" id="srv-analytical">0</span></div>
+          <div class="style-radar-row"><span class="sr-name">Example-based</span><div class="sr-bar"><div class="sr-fill example_based" id="sr-example_based" style="width:0%"></div></div><span class="sr-val" id="srv-example_based">0</span></div>
+          <div class="style-radar-row"><span class="sr-name">Storytelling</span><div class="sr-bar"><div class="sr-fill storytelling" id="sr-storytelling" style="width:0%"></div></div><span class="sr-val" id="srv-storytelling">0</span></div>
+        </div>
+
+        <div class="section-title">Confusion Tracker</div>
+        <div class="confusion-list" id="confusion-list"><div style="color:var(--mut);font-size:13px;">No confusion detected yet — great work!</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+let currentLevel = 'intermediate';
+let isLoading = false;
+let coveredTopics = [];
+let graphData = {};
+let wbNotes = [];
+let quizAnswers = {};
+let quizCorrect = 0;
+const API = 'http://localhost:5000';
+
+// ── Tab switching ──────────────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.nav-tab').forEach((t,i) => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+  if (name === 'graph') drawGraph();
+  if (name === 'stats') loadStats();
+}
+
+// ── Level ──────────────────────────────────────────────────────────────────
+function setLevel(level) {
+  currentLevel = level;
+  document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-level="${level}"]`).classList.add('active');
+}
+
+// ── Input helpers ──────────────────────────────────────────────────────────
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+function quickAsk(c) { document.getElementById('concept-input').value = c; sendMessage(); }
+function escH(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function scrollBottom() {
+  const a = document.getElementById('chat-area'); a.scrollTop = a.scrollHeight;
+}
+
+// ── Send message ───────────────────────────────────────────────────────────
+async function sendMessage() {
+  const input = document.getElementById('concept-input');
+  const text = input.value.trim();
+  if (!text || isLoading) return;
+
+  const welcome = document.getElementById('welcome');
+  if (welcome) welcome.remove();
+
+  isLoading = true;
+  document.getElementById('send-btn').disabled = true;
+  input.value = ''; input.style.height = 'auto';
+
+  // Determine concept — strip "confused about" etc
+  const concept = text.replace(/i('m| am) confused (about )?/i,'').trim() || text;
+
+  addUserMsg(text, currentLevel);
+  const typingEl = addTyping();
+
+  try {
+    const res = await fetch(`${API}/explain`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ concept, level: currentLevel, user_message: text })
+    });
+    const data = await res.json();
+    typingEl.remove();
+    if (data.error) { addBotMsg('Error: ' + data.error, currentLevel, false, false); }
+    else {
+      addBotMsg(data.answer, currentLevel, data.is_confused, data.is_repeated);
+      updateSidebar(data);
+      // Auto-add whiteboard note for new topics
+      if (!data.is_repeated) autoWhiteboardNote(concept, data.answer);
+    }
+  } catch(e) {
+    typingEl.remove();
+    addBotMsg('⚠ Cannot reach StudyBuddy server. Make sure:\n1. ollama serve is running\n2. python app.py is running', currentLevel, false, false);
+  }
+
+  isLoading = false;
+  document.getElementById('send-btn').disabled = false;
+  input.focus();
+}
+
+function addUserMsg(text, level) {
+  const chat = document.getElementById('chat-area');
+  const d = document.createElement('div');
+  d.className = 'msg user';
+  d.innerHTML = `<div class="msg-meta"><span class="lvl-badge lvl-${level.substring(0,3)}">${level}</span><span>you</span></div><div class="bubble">${escH(text)}</div>`;
+  chat.appendChild(d); scrollBottom();
+}
+
+function addTyping() {
+  const chat = document.getElementById('chat-area');
+  const d = document.createElement('div');
+  d.className = 'msg bot';
+  d.innerHTML = `<div class="typing"><span></span><span></span><span></span></div>`;
+  chat.appendChild(d); scrollBottom();
+  return d;
+}
+
+function addBotMsg(answer, level, isConfused, isRepeated) {
+  const chat = document.getElementById('chat-area');
+  const d = document.createElement('div');
+  d.className = `msg bot${isConfused ? ' confused' : ''}`;
+
+  const nextMatch = answer.match(/📚\s*Next suggested topic[:\s]+(.+)/i);
+  const nextTopic = nextMatch ? nextMatch[1].trim() : null;
+  const mainAnswer = answer.replace(/📚\s*Next suggested topic[:\s]+.+/i,'').trim();
+  const topicName = nextTopic ? nextTopic.split('—')[0].split('-')[0].trim() : '';
+
+  const shortLvl = level.substring(0,3);
+  let html = '';
+  if (isConfused) html += `<div class="confused-badge">⚠ Confusion detected — simplified response</div>`;
+  if (isRepeated) html += `<div class="confused-badge" style="color:var(--acc4);background:rgba(250,189,109,.1);">↩ Already covered — new angle</div>`;
+  html += `<div class="msg-meta"><span class="lvl-badge lvl-${shortLvl}">${level}</span><span>studybuddy</span></div>`;
+  html += `<div class="bubble">${escH(mainAnswer)}</div>`;
+  if (nextTopic) html += `<div class="next-card" onclick="quickAsk('${escH(topicName)}')"><div class="next-card-lbl">📚 suggested next</div>${escH(nextTopic)}</div>`;
+
+  d.innerHTML = html;
+  chat.appendChild(d); scrollBottom();
+}
+
+// ── Sidebar update ─────────────────────────────────────────────────────────
+function updateSidebar(data) {
+  // Topics
+  coveredTopics = data.covered_topics || [];
+  const tt = document.getElementById('topic-tags');
+  if (coveredTopics.length === 0) {
+    tt.innerHTML = '<div style="font-size:11px;color:var(--mut);font-family:\'DM Mono\',monospace;">None yet</div>';
+  } else {
+    tt.innerHTML = coveredTopics.map(t => `<div class="topic-tag new">${escH(t)}</div>`).join('');
+  }
+
+  // Gaps
+  const gaps = data.knowledge_gaps || [];
+  const gl = document.getElementById('gap-list');
+  gl.innerHTML = gaps.length === 0
+    ? '<div style="font-size:11px;color:var(--mut);font-family:\'DM Mono\',monospace;">None detected</div>'
+    : gaps.map(g => `<div class="gap-item" onclick="quickAsk('${escH(g)}')" title="Click to study">${escH(g)}</div>`).join('');
+
+  // Streak
+  if (data.streak) {
+    document.getElementById('streak-count').textContent = data.streak.current_streak;
+  }
+
+  // Style scores
+  const scores = data.style_scores || {};
+  // fetch full stats for style
+  fetchStyleScores();
+}
+
+async function fetchStyleScores() {
+  try {
+    const res = await fetch(`${API}/stats`);
+    const data = await res.json();
+    const scores = data.style_scores || {};
+    const maxVal = Math.max(...Object.values(scores), 1);
+    ['visual','analytical','example_based','storytelling'].forEach(k => {
+      const v = scores[k] || 0;
+      const pct = Math.round((v / maxVal) * 100);
+      const sf = document.getElementById(`sf-${k}`);
+      const sv = document.getElementById(`sv-${k}`);
+      if (sf) sf.style.width = pct + '%';
+      if (sv) sv.textContent = v;
+    });
+  } catch(e) {}
+}
+
+// ── Quiz ───────────────────────────────────────────────────────────────────
+async function generateQuiz() {
+  const concept = document.getElementById('quiz-concept').value.trim();
+  if (!concept) return;
+  const btn = document.getElementById('quiz-btn');
+  btn.disabled = true; btn.textContent = 'Generating...';
+  document.getElementById('quiz-content').innerHTML = '<div class="quiz-empty">Generating questions...</div>';
+  quizAnswers = {}; quizCorrect = 0;
+
+  try {
+    const res = await fetch(`${API}/quiz`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ concept })
+    });
+    const data = await res.json();
+    renderQuiz(data.questions, concept);
+  } catch(e) {
+    document.getElementById('quiz-content').innerHTML = '<div class="quiz-empty">Could not generate quiz. Make sure app.py is running.</div>';
+  }
+  btn.disabled = false; btn.textContent = 'Generate Quiz';
+}
+
+function renderQuiz(questions, concept) {
+  if (!questions || questions.length === 0) {
+    document.getElementById('quiz-content').innerHTML = '<div class="quiz-empty">Could not generate questions. Try a different concept.</div>';
+    return;
+  }
+  let html = '';
+  questions.forEach((q, qi) => {
+    html += `<div class="quiz-card" id="qcard-${qi}">
+      <div class="quiz-q">${qi+1}. ${escH(q.question)}</div>
+      <div class="quiz-opts">`;
+    (q.options || []).forEach((opt, oi) => {
+      html += `<button class="quiz-opt" id="qopt-${qi}-${oi}" onclick="answerQuiz(${qi},${oi},'${escH(opt[0])}','${escH(q.answer)}')">${escH(opt)}</button>`;
+    });
+    html += `</div></div>`;
+  });
+  html += `<div class="quiz-score" id="quiz-score"></div>`;
+  document.getElementById('quiz-content').innerHTML = html;
+}
+
+function answerQuiz(qi, oi, chosen, correct) {
+  if (quizAnswers[qi] !== undefined) return;
+  quizAnswers[qi] = chosen;
+  const isCorrect = chosen === correct;
+  if (isCorrect) quizCorrect++;
+
+  // Mark all options
+  document.querySelectorAll(`#qcard-${qi} .quiz-opt`).forEach((btn, i) => {
+    btn.disabled = true;
+    const letter = btn.textContent.trim()[0];
+    if (letter === correct) btn.classList.add('correct');
+    else if (i === oi && !isCorrect) btn.classList.add('wrong');
+  });
+
+  // Show score if all answered
+  const totalQ = document.querySelectorAll('[id^="qcard-"]').length;
+  if (Object.keys(quizAnswers).length === totalQ) {
+    document.getElementById('quiz-score').textContent =
+      `✅ Score: ${quizCorrect}/${totalQ} — ${Math.round(quizCorrect/totalQ*100)}%`;
+  }
+}
+
+// ── Knowledge Graph ────────────────────────────────────────────────────────
+async function drawGraph() {
+  try {
+    const res = await fetch(`${API}/graph`);
+    const data = await res.json();
+    graphData = data.graph || {};
+  } catch(e) { graphData = {}; }
+
+  const canvas = document.getElementById('graph-canvas');
+  const empty = document.getElementById('graph-empty');
+  const keys = Object.keys(graphData);
+
+  if (keys.length === 0) { empty.style.display='block'; return; }
+  empty.style.display = 'none';
+
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0,0,W,H);
+
+  // Build nodes
+  const allTopics = new Set(keys);
+  keys.forEach(k => (graphData[k]||[]).forEach(r => allTopics.add(r)));
+  const nodes = {};
+  let i = 0;
+  const total = allTopics.size;
+  allTopics.forEach(t => {
+    const angle = (i / total) * Math.PI * 2 - Math.PI/2;
+    const r = Math.min(W,H) * 0.35;
+    nodes[t] = {
+      x: W/2 + Math.cos(angle)*r,
+      y: H/2 + Math.sin(angle)*r,
+      studied: keys.includes(t)
+    };
+    i++;
+  });
+
+  // Draw edges
+  keys.forEach(k => {
+    (graphData[k]||[]).forEach(related => {
+      if (!nodes[related]) return;
+      ctx.beginPath();
+      ctx.moveTo(nodes[k].x, nodes[k].y);
+      ctx.lineTo(nodes[related].x, nodes[related].y);
+      ctx.strokeStyle = 'rgba(124,109,250,0.2)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    });
+  });
+
+  // Draw nodes
+  allTopics.forEach(t => {
+    const n = nodes[t];
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, n.studied ? 10 : 6, 0, Math.PI*2);
+    ctx.fillStyle = n.studied ? '#7c6dfa' : '#2a2a42';
+    ctx.strokeStyle = n.studied ? '#9585fc' : '#3a3a55';
+    ctx.lineWidth = 2;
+    ctx.fill(); ctx.stroke();
+
+    ctx.fillStyle = n.studied ? '#e8e8f8' : '#6b6b90';
+    ctx.font = `${n.studied ? '500' : '400'} 11px "DM Mono"`;
+    ctx.textAlign = 'center';
+    ctx.fillText(t.length > 14 ? t.substring(0,13)+'…' : t, n.x, n.y + (n.studied ? 22 : 18));
+  });
+}
+
+// ── Whiteboard ─────────────────────────────────────────────────────────────
+function autoWhiteboardNote(topic, answer) {
+  const firstLine = answer.split('\n')[0].substring(0,120);
+  addNoteToUI(topic, firstLine + (answer.length > 120 ? '...' : ''));
+  fetch(`${API}/whiteboard`, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ topic, note: firstLine })
+  }).catch(()=>{});
+}
+
+async function addNote() {
+  const topic = document.getElementById('wb-topic').value.trim() || 'General';
+  const note = document.getElementById('wb-note-input').value.trim();
+  if (!note) return;
+  addNoteToUI(topic, note);
+  document.getElementById('wb-note-input').value = '';
+  document.getElementById('wb-topic').value = '';
+  fetch(`${API}/whiteboard`, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ topic, note })
+  }).catch(()=>{});
+}
+
+function addNoteToUI(topic, note) {
+  const canvas = document.getElementById('wb-canvas');
+  // Remove placeholder
+  const placeholder = canvas.querySelector('div[style*="margin-top:60px"]');
+  if (placeholder) placeholder.remove();
+
+  const id = Date.now();
+  const d = document.createElement('div');
+  d.className = 'wb-note'; d.id = `note-${id}`;
+  d.innerHTML = `
+    <div class="wb-note-topic">${escH(topic)}</div>
+    <div class="wb-note-text">${escH(note)}</div>
+    <button class="wb-note-del" onclick="document.getElementById('note-${id}').remove()">✕</button>`;
+  canvas.appendChild(d);
+  wbNotes.push({topic, note});
+  document.getElementById('st-notes').textContent = wbNotes.length;
+}
+
+// ── Stats ──────────────────────────────────────────────────────────────────
+async function loadStats() {
+  try {
+    const res = await fetch(`${API}/stats`);
+    const data = await res.json();
+    document.getElementById('st-streak').textContent = data.streak?.current_streak || 0;
+    document.getElementById('st-longest').textContent = `Longest: ${data.streak?.longest_streak || 0}`;
+    document.getElementById('st-topics').textContent = (data.covered_topics||[]).length;
+    document.getElementById('st-quizzes').textContent = data.quiz_count || 0;
+    document.getElementById('st-gaps').textContent = (data.gaps||[]).length;
+    document.getElementById('st-style').textContent = (data.dominant_style||'—').replace('_',' ');
+    document.getElementById('streak-count').textContent = data.streak?.current_streak || 0;
+
+    const scores = data.style_scores || {};
+    const maxVal = Math.max(...Object.values(scores), 1);
+    ['visual','analytical','example_based','storytelling'].forEach(k => {
+      const v = scores[k]||0;
+      const pct = Math.round((v/maxVal)*100);
+      const el = document.getElementById(`sr-${k}`);
+      const vl = document.getElementById(`srv-${k}`);
+      if (el) el.style.width = pct+'%';
+      if (vl) vl.textContent = v;
+    });
+
+    const conf = data.confusion_tracker || {};
+    const cl = document.getElementById('confusion-list');
+    const entries = Object.entries(conf);
+    cl.innerHTML = entries.length === 0
+      ? '<div style="color:var(--mut);font-size:13px;">No confusion detected yet — great work!</div>'
+      : entries.sort((a,b)=>b[1]-a[1]).map(([t,c]) =>
+          `<div class="conf-item"><span class="conf-topic">${escH(t)}</span><span class="conf-count">${c}x confused</span></div>`
+        ).join('');
+  } catch(e) {}
+}
+
+// ── Reset ──────────────────────────────────────────────────────────────────
+async function resetSession() {
+  if (!confirm('Reset entire session? All memory, topics, and progress will be cleared.')) return;
+  await fetch(`${API}/reset`, {method:'POST'}).catch(()=>{});
+  coveredTopics = []; graphData = {}; wbNotes = []; quizAnswers = {};
+  document.getElementById('chat-area').innerHTML = `
+    <div class="welcome" id="welcome">
+      <span class="welcome-icon">🧠</span>
+      <h2>What do you want to learn?</h2>
+      <p>Ask any concept. I'll explain it at your level, track what you know, detect confusion, and guide your learning path.</p>
+      <div class="chips">
+        <div class="chip" onclick="quickAsk('Linked Lists')">Linked Lists</div>
+        <div class="chip" onclick="quickAsk('Photosynthesis')">Photosynthesis</div>
+        <div class="chip" onclick="quickAsk('Newton Laws')">Newton's Laws</div>
+        <div class="chip" onclick="quickAsk('Binary Search')">Binary Search</div>
+        <div class="chip" onclick="quickAsk('Recursion')">Recursion</div>
+        <div class="chip" onclick="quickAsk('Machine Learning')">Machine Learning</div>
+      </div>
+    </div>`;
+  document.getElementById('topic-tags').innerHTML = '<div style="font-size:11px;color:var(--mut);font-family:\'DM Mono\',monospace;">None yet</div>';
+  document.getElementById('gap-list').innerHTML = '<div style="font-size:11px;color:var(--mut);font-family:\'DM Mono\',monospace;">None detected</div>';
+  document.getElementById('wb-canvas').innerHTML = '<div style="width:100%;text-align:center;color:var(--mut);font-size:13px;margin-top:60px;">Your whiteboard is empty.</div>';
+  document.getElementById('streak-count').textContent = '0';
+}
+</script>
+</body>
+</html>
