@@ -16,6 +16,133 @@
 }
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);height:100vh;display:flex;flex-direction:column;overflow:hidden;}
 
+/* ══════════════════════════════════════════
+   AUTH OVERLAY
+══════════════════════════════════════════ */
+#auth-overlay{
+  position:fixed;inset:0;z-index:1000;
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  animation:authFadeIn .4s ease;
+}
+@keyframes authFadeIn{from{opacity:0;}to{opacity:1;}}
+
+#auth-overlay.hidden{
+  animation:authFadeOut .4s ease forwards;
+  pointer-events:none;
+}
+@keyframes authFadeOut{from{opacity:1;}to{opacity:0;}}
+
+.auth-card{
+  background:var(--s1);
+  border:1px solid var(--bd);
+  border-radius:20px;
+  padding:40px 36px;
+  width:100%;max-width:420px;
+  animation:cardSlideUp .45s cubic-bezier(.22,1,.36,1);
+}
+@keyframes cardSlideUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+
+.auth-logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:28px;}
+.auth-logo-box{width:36px;height:36px;background:linear-gradient(135deg,var(--acc),var(--acc2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.auth-logo-txt{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;}
+.auth-logo-badge{font-size:9px;font-family:'DM Mono',monospace;background:var(--acc);color:#fff;padding:2px 6px;border-radius:4px;}
+
+.auth-tab-toggle{display:flex;background:var(--s2);border:1px solid var(--bd);border-radius:10px;margin-bottom:24px;padding:3px;}
+.auth-tab-opt{flex:1;padding:8px;text-align:center;font-size:13px;font-family:'DM Mono',monospace;color:var(--mut);cursor:pointer;border-radius:8px;transition:all .2s;border:none;background:none;}
+.auth-tab-opt.active{background:var(--acc);color:#fff;}
+
+.auth-title{font-family:'Syne',sans-serif;font-weight:700;font-size:22px;text-align:center;margin-bottom:4px;}
+.auth-sub{font-size:13px;color:var(--mut);text-align:center;margin-bottom:24px;}
+
+.google-btn{
+  width:100%;background:var(--s2);border:1px solid var(--bd);border-radius:10px;
+  padding:11px;display:flex;align-items:center;justify-content:center;gap:10px;
+  cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--txt);
+  transition:all .2s;margin-bottom:18px;
+}
+.google-btn:hover{border-color:var(--acc);background:rgba(124,109,250,.08);}
+.google-icon{width:18px;height:18px;flex-shrink:0;}
+
+.auth-divider{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+.auth-divider-line{flex:1;height:1px;background:var(--bd);}
+.auth-divider-txt{font-size:11px;font-family:'DM Mono',monospace;color:var(--mut);}
+
+.auth-field{margin-bottom:13px;}
+.auth-field label{display:block;font-size:11px;font-family:'DM Mono',monospace;color:var(--mut);margin-bottom:5px;letter-spacing:.5px;}
+.auth-field input{
+  width:100%;background:var(--s2);border:1px solid var(--bd);border-radius:10px;
+  padding:10px 14px;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:14px;
+  outline:none;transition:border-color .2s;
+}
+.auth-field input:focus{border-color:var(--acc);}
+.auth-field input::placeholder{color:var(--mut);}
+.auth-field input.err{border-color:var(--acc2);}
+
+.auth-field-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;}
+.auth-field-row label{font-size:11px;font-family:'DM Mono',monospace;color:var(--mut);letter-spacing:.5px;}
+.forgot-link{font-size:11px;color:var(--acc);cursor:pointer;font-family:'DM Mono',monospace;}
+.forgot-link:hover{color:#9585fc;}
+
+.auth-error{font-size:12px;color:var(--acc2);margin-top:5px;font-family:'DM Mono',monospace;display:none;}
+.auth-info{font-size:12px;color:var(--acc3);margin-top:5px;font-family:'DM Mono',monospace;display:none;}
+
+.strength-bar{display:flex;gap:4px;margin-top:6px;}
+.strength-seg{flex:1;height:3px;border-radius:2px;background:var(--bd);transition:background .3s;}
+.strength-seg.weak{background:var(--acc2);}
+.strength-seg.medium{background:var(--acc4);}
+.strength-seg.strong{background:var(--acc3);}
+
+.auth-submit{
+  width:100%;background:var(--acc);border:none;border-radius:10px;
+  padding:12px;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;
+  font-weight:500;cursor:pointer;transition:all .2s;margin-top:6px;
+}
+.auth-submit:hover{background:#9585fc;transform:translateY(-1px);}
+.auth-submit:active{transform:translateY(0);}
+
+.auth-switch{text-align:center;font-size:13px;color:var(--mut);margin-top:18px;}
+.auth-switch-link{color:var(--acc);cursor:pointer;font-weight:500;}
+.auth-switch-link:hover{color:#9585fc;}
+
+/* Success screen */
+.success-screen{text-align:center;padding:10px 0;}
+.success-icon-wrap{font-size:56px;display:block;margin-bottom:16px;animation:popIn .5s cubic-bezier(.22,1,.36,1);}
+@keyframes popIn{from{transform:scale(.5);opacity:0;}to{transform:scale(1);opacity:1;}}
+.success-title{
+  font-family:'Syne',sans-serif;font-weight:700;font-size:24px;margin-bottom:10px;
+  background:linear-gradient(135deg,var(--acc),var(--acc3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.success-sub{font-size:13px;color:var(--mut);line-height:1.7;margin-bottom:24px;}
+.user-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--s2);border:1px solid var(--bd);border-radius:30px;
+  padding:6px 16px 6px 8px;margin-bottom:28px;
+}
+.user-avatar{
+  width:30px;height:30px;border-radius:50%;
+  background:linear-gradient(135deg,var(--acc),var(--acc2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:600;color:#fff;
+}
+.user-name-pill{font-size:13px;font-family:'DM Mono',monospace;}
+.continue-btn{
+  width:100%;background:var(--acc);border:none;border-radius:10px;
+  padding:13px;color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;
+  font-weight:500;cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.continue-btn:hover{background:#9585fc;transform:translateY(-1px);}
+.dot-live{width:8px;height:8px;border-radius:50%;background:var(--acc3);animation:pulse 2s infinite;flex-shrink:0;}
+
+
+/* ══════════════════════════════════════════
+   MAIN APP  (hidden until logged in)
+══════════════════════════════════════════ */
+#main-app{display:none;flex-direction:column;flex:1;overflow:hidden;}
+#main-app.visible{display:flex;}
+
 /* ── Top nav ── */
 .topnav{display:flex;align-items:center;gap:0;border-bottom:1px solid var(--bd);background:var(--s1);flex-shrink:0;}
 .logo{display:flex;align-items:center;gap:10px;padding:14px 24px;border-right:1px solid var(--bd);}
@@ -31,6 +158,16 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);heig
 .ollama-pill{font-size:11px;font-family:'DM Mono',monospace;padding:4px 12px;border-radius:20px;border:1px solid var(--acc3);color:var(--acc3);display:flex;align-items:center;gap:5px;}
 .dot-pulse{width:6px;height:6px;border-radius:50%;background:var(--acc3);animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+/* user avatar in nav */
+.nav-user-btn{
+  display:flex;align-items:center;gap:8px;
+  background:var(--s2);border:1px solid var(--bd);border-radius:20px;
+  padding:5px 12px 5px 6px;cursor:pointer;transition:all .2s;font-size:12px;
+  font-family:'DM Mono',monospace;color:var(--txt);
+}
+.nav-user-btn:hover{border-color:var(--acc);}
+.nav-avatar{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--acc),var(--acc2));display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff;}
 
 /* ── Layout ── */
 .workspace{display:flex;flex:1;overflow:hidden;}
@@ -154,8 +291,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);heig
 .wb-note-text{font-size:13px;line-height:1.6;color:var(--txt);flex:1;white-space:pre-wrap;}
 .wb-note-del{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--mut);cursor:pointer;font-size:14px;transition:color .2s;}
 .wb-note-del:hover{color:var(--acc2);}
-.wb-area{flex:1;background:transparent;border:none;outline:none;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:13px;resize:none;line-height:1.6;}
-.wb-area::placeholder{color:var(--mut);}
 
 /* ── Stats panel ── */
 .stats-panel{flex:1;overflow-y:auto;padding:28px 32px;}
@@ -190,165 +325,437 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);heig
 </head>
 <body>
 
-<!-- Top Nav -->
-<nav class="topnav">
-  <div class="logo">
-    <div class="logo-box">📚</div>
-    <span class="logo-txt">StudyBuddy</span>
-    <span class="logo-badge">PRO</span>
-  </div>
-  <div class="nav-tabs">
-    <button class="nav-tab active" onclick="switchTab('chat')">💬 Chat</button>
-    <button class="nav-tab" onclick="switchTab('quiz')">🧪 Quiz</button>
-    <button class="nav-tab" onclick="switchTab('graph')">🕸 Knowledge Graph</button>
-    <button class="nav-tab" onclick="switchTab('whiteboard')">🖊 Whiteboard</button>
-    <button class="nav-tab" onclick="switchTab('stats')">📊 Stats</button>
-  </div>
-  <div class="nav-right">
-    <div class="streak-badge">🔥 <span id="streak-count">0</span> day streak</div>
-    <div class="ollama-pill"><div class="dot-pulse"></div>Ollama</div>
-  </div>
-</nav>
+<!-- ══════════════════════════════════════════
+     AUTH OVERLAY
+══════════════════════════════════════════ -->
+<div id="auth-overlay">
+  <div class="auth-card" id="auth-card-inner">
 
-<!-- Workspace -->
-<div class="workspace">
-
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div>
-      <div class="sw-label">Difficulty</div>
-      <button class="level-btn" data-level="beginner" onclick="setLevel('beginner')">
-        <div class="ldot"></div>
-        <div class="linfo"><div class="lname">Beginner</div><div class="ldesc">Simple analogies</div></div>
-      </button>
-      <button class="level-btn active" data-level="intermediate" onclick="setLevel('intermediate')">
-        <div class="ldot"></div>
-        <div class="linfo"><div class="lname">Intermediate</div><div class="ldesc">Some depth</div></div>
-      </button>
-      <button class="level-btn" data-level="expert" onclick="setLevel('expert')">
-        <div class="ldot"></div>
-        <div class="linfo"><div class="lname">Expert</div><div class="ldesc">Technical precision</div></div>
-      </button>
+    <!-- Logo -->
+    <div class="auth-logo">
+      <div class="auth-logo-box">📚</div>
+      <span class="auth-logo-txt">StudyBuddy</span>
+      <span class="auth-logo-badge">PRO</span>
     </div>
 
-    <div>
-      <div class="sw-label">Learning Style</div>
-      <div class="style-bar">
-        <div class="style-row"><span class="style-name">Visual</span><div class="style-track"><div class="style-fill" id="sf-visual" style="width:0%"></div></div><span class="style-val" id="sv-visual">0</span></div>
-        <div class="style-row"><span class="style-name">Analytical</span><div class="style-track"><div class="style-fill" id="sf-analytical" style="width:0%"></div></div><span class="style-val" id="sv-analytical">0</span></div>
-        <div class="style-row"><span class="style-name">Examples</span><div class="style-track"><div class="style-fill" id="sf-example_based" style="width:0%"></div></div><span class="style-val" id="sv-example_based">0</span></div>
-        <div class="style-row"><span class="style-name">Story</span><div class="style-track"><div class="style-fill" id="sf-storytelling" style="width:0%"></div></div><span class="style-val" id="sv-storytelling">0</span></div>
+    <!-- LOGIN VIEW -->
+    <div id="view-login">
+      <div class="auth-tab-toggle">
+        <button class="auth-tab-opt active" onclick="showLogin()">Log in</button>
+        <button class="auth-tab-opt" onclick="showSignup()">Sign up</button>
       </div>
+      <div class="auth-title">Welcome back</div>
+      <div class="auth-sub">Continue your learning journey</div>
+
+      <button class="google-btn" onclick="googleAuth()">
+        <svg class="google-icon" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+        </svg>
+        Continue with Google
+      </button>
+
+      <div class="auth-divider">
+        <div class="auth-divider-line"></div>
+        <span class="auth-divider-txt">or</span>
+        <div class="auth-divider-line"></div>
+      </div>
+
+      <div class="auth-field">
+        <label>EMAIL</label>
+        <input type="email" id="login-email" placeholder="you@example.com"/>
+      </div>
+      <div class="auth-field">
+        <div class="auth-field-row">
+          <label>PASSWORD</label>
+          <span class="forgot-link" onclick="forgotPw()">Forgot password?</span>
+        </div>
+        <input type="password" id="login-pw" placeholder="••••••••"/>
+        <div class="auth-error" id="login-err"></div>
+        <div class="auth-info" id="login-info"></div>
+      </div>
+
+      <button class="auth-submit" onclick="doLogin()">Log in</button>
+      <div class="auth-switch">Don't have an account? <span class="auth-switch-link" onclick="showSignup()">Sign up free</span></div>
     </div>
 
-    <div>
-      <div class="sw-label">Knowledge Gaps</div>
-      <div class="gap-list" id="gap-list"><div style="font-size:11px;color:var(--mut);font-family:'DM Mono',monospace;">None detected</div></div>
+    <!-- SIGNUP VIEW -->
+    <div id="view-signup" style="display:none">
+      <div class="auth-tab-toggle">
+        <button class="auth-tab-opt" onclick="showLogin()">Log in</button>
+        <button class="auth-tab-opt active" onclick="showSignup()">Sign up</button>
+      </div>
+      <div class="auth-title">Create account</div>
+      <div class="auth-sub">Start learning smarter today</div>
+
+      <button class="google-btn" onclick="googleAuth()">
+        <svg class="google-icon" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+        </svg>
+        Sign up with Google
+      </button>
+
+      <div class="auth-divider">
+        <div class="auth-divider-line"></div>
+        <span class="auth-divider-txt">or</span>
+        <div class="auth-divider-line"></div>
+      </div>
+
+      <div class="auth-field">
+        <label>FULL NAME</label>
+        <input type="text" id="signup-name" placeholder="Your name"/>
+      </div>
+      <div class="auth-field">
+        <label>EMAIL</label>
+        <input type="email" id="signup-email" placeholder="you@example.com"/>
+      </div>
+      <div class="auth-field">
+        <label>PASSWORD</label>
+        <input type="password" id="signup-pw" placeholder="At least 6 characters" oninput="checkStrength(this.value)"/>
+        <div class="strength-bar">
+          <div class="strength-seg" id="seg0"></div>
+          <div class="strength-seg" id="seg1"></div>
+          <div class="strength-seg" id="seg2"></div>
+          <div class="strength-seg" id="seg3"></div>
+        </div>
+        <div class="auth-error" id="signup-err"></div>
+      </div>
+
+      <button class="auth-submit" onclick="doSignup()">Create account</button>
+      <div class="auth-switch">Already have an account? <span class="auth-switch-link" onclick="showLogin()">Log in</span></div>
     </div>
 
-    <div>
-      <div class="sw-label">Topics Covered</div>
-      <div class="topic-tags" id="topic-tags"><div style="font-size:11px;color:var(--mut);font-family:'DM Mono',monospace;">None yet</div></div>
-    </div>
-
-    <button class="reset-btn" onclick="resetSession()">↺ Reset Session</button>
-  </aside>
-
-  <!-- Content -->
-  <div class="content">
-
-    <!-- CHAT TAB -->
-    <div class="tab-panel active" id="tab-chat">
-      <div class="chat-area" id="chat-area">
-        <div class="welcome" id="welcome">
-          <span class="welcome-icon">🧠</span>
-          <h2>What do you want to learn?</h2>
-          <p>Ask any concept. I'll explain it at your level, track what you know, detect confusion, and guide your learning path.</p>
-          <div class="chips">
-            <div class="chip" onclick="quickAsk('Linked Lists')">Linked Lists</div>
-            <div class="chip" onclick="quickAsk('Photosynthesis')">Photosynthesis</div>
-            <div class="chip" onclick="quickAsk('Newton Laws')">Newton's Laws</div>
-            <div class="chip" onclick="quickAsk('Binary Search')">Binary Search</div>
-            <div class="chip" onclick="quickAsk('Recursion')">Recursion</div>
-            <div class="chip" onclick="quickAsk('Machine Learning')">Machine Learning</div>
-            <div class="chip" onclick="quickAsk('Quantum Computing')">Quantum Computing</div>
-            <div class="chip" onclick="quickAsk('DNA Replication')">DNA Replication</div>
+    <!-- SUCCESS VIEW -->
+    <div id="view-success" style="display:none">
+      <div class="success-screen">
+        <span class="success-icon-wrap">🎉</span>
+        <div class="success-title">Login Successful!</div>
+        <div class="success-sub">Welcome to StudyBuddy Pro.<br/>Your streaks and progress are ready.</div>
+        <div style="display:flex;justify-content:center;">
+          <div class="user-pill">
+            <div class="user-avatar" id="success-avatar">U</div>
+            <span class="user-name-pill" id="success-username">User</span>
           </div>
         </div>
-      </div>
-      <div class="input-area">
-        <div class="input-wrap">
-          <textarea id="concept-input" rows="1" placeholder="Ask about any concept... or say 'I'm confused about X'" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-          <button class="send-btn" id="send-btn" onclick="sendMessage()">➤</button>
-        </div>
-        <div class="input-hint">Enter to send · Shift+Enter new line</div>
-      </div>
-    </div>
-
-    <!-- QUIZ TAB -->
-    <div class="tab-panel" id="tab-quiz">
-      <div class="quiz-panel">
-        <div class="quiz-header">
-          <input id="quiz-concept" placeholder="Enter concept to quiz on... e.g. Recursion" onkeydown="if(event.key==='Enter')generateQuiz()"/>
-          <button class="btn-primary" id="quiz-btn" onclick="generateQuiz()">Generate Quiz</button>
-        </div>
-        <div id="quiz-content"><div class="quiz-empty">Enter a concept above and click Generate Quiz.<br/>Questions will appear here.</div></div>
-      </div>
-    </div>
-
-    <!-- GRAPH TAB -->
-    <div class="tab-panel" id="tab-graph">
-      <div class="graph-panel">
-        <canvas id="graph-canvas"></canvas>
-        <div class="graph-empty" id="graph-empty">Study some concepts in the Chat tab first.<br/>Your knowledge graph will appear here.</div>
-        <div class="graph-legend">● Studied topic &nbsp; ○ Related (not yet studied)</div>
-      </div>
-    </div>
-
-    <!-- WHITEBOARD TAB -->
-    <div class="tab-panel" id="tab-whiteboard">
-      <div class="whiteboard-panel">
-        <div class="wb-toolbar">
-          <input id="wb-topic" placeholder="Topic label..."/>
-          <textarea id="wb-note-input" style="flex:2;background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px 12px;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;resize:none;height:38px;" placeholder="Write your note..."></textarea>
-          <button class="btn-primary" onclick="addNote()">Add Note</button>
-        </div>
-        <div class="wb-canvas" id="wb-canvas">
-          <div style="width:100%;text-align:center;color:var(--mut);font-size:13px;margin-top:60px;">Your whiteboard is empty.<br/>Add notes above or they'll be auto-added as you study.</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- STATS TAB -->
-    <div class="tab-panel" id="tab-stats">
-      <div class="stats-panel">
-        <div class="stats-grid">
-          <div class="stat-card"><div class="stat-icon">🔥</div><div class="stat-val" id="st-streak">0</div><div class="stat-lbl">Day Streak</div><div class="stat-sub" id="st-longest">Longest: 0</div></div>
-          <div class="stat-card"><div class="stat-icon">📖</div><div class="stat-val" id="st-topics">0</div><div class="stat-lbl">Topics Covered</div></div>
-          <div class="stat-card"><div class="stat-icon">🧪</div><div class="stat-val" id="st-quizzes">0</div><div class="stat-lbl">Quizzes Taken</div></div>
-          <div class="stat-card"><div class="stat-icon">⚠</div><div class="stat-val" id="st-gaps">0</div><div class="stat-lbl">Knowledge Gaps</div></div>
-          <div class="stat-card"><div class="stat-icon">🎨</div><div class="stat-val" id="st-style">—</div><div class="stat-lbl">Learning Style</div></div>
-          <div class="stat-card"><div class="stat-icon">🖊</div><div class="stat-val" id="st-notes">0</div><div class="stat-lbl">Whiteboard Notes</div></div>
-        </div>
-
-        <div class="section-title">Learning Style Breakdown</div>
-        <div class="style-radar" id="stats-style-radar">
-          <div class="style-radar-row"><span class="sr-name">Visual</span><div class="sr-bar"><div class="sr-fill visual" id="sr-visual" style="width:0%"></div></div><span class="sr-val" id="srv-visual">0</span></div>
-          <div class="style-radar-row"><span class="sr-name">Analytical</span><div class="sr-bar"><div class="sr-fill analytical" id="sr-analytical" style="width:0%"></div></div><span class="sr-val" id="srv-analytical">0</span></div>
-          <div class="style-radar-row"><span class="sr-name">Example-based</span><div class="sr-bar"><div class="sr-fill example_based" id="sr-example_based" style="width:0%"></div></div><span class="sr-val" id="srv-example_based">0</span></div>
-          <div class="style-radar-row"><span class="sr-name">Storytelling</span><div class="sr-bar"><div class="sr-fill storytelling" id="sr-storytelling" style="width:0%"></div></div><span class="sr-val" id="srv-storytelling">0</span></div>
-        </div>
-
-        <div class="section-title">Confusion Tracker</div>
-        <div class="confusion-list" id="confusion-list"><div style="color:var(--mut);font-size:13px;">No confusion detected yet — great work!</div></div>
+        <br/>
+        <button class="continue-btn" onclick="enterDashboard()">
+          <div class="dot-live"></div>
+          Continue to Dashboard
+        </button>
       </div>
     </div>
 
   </div>
 </div>
 
+<!-- ══════════════════════════════════════════
+     MAIN APP
+══════════════════════════════════════════ -->
+<div id="main-app">
+
+  <!-- Top Nav -->
+  <nav class="topnav">
+    <div class="logo">
+      <div class="logo-box">📚</div>
+      <span class="logo-txt">StudyBuddy</span>
+      <span class="logo-badge">PRO</span>
+    </div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="switchTab('chat',this)">💬 Chat</button>
+      <button class="nav-tab" onclick="switchTab('quiz',this)">🧪 Quiz</button>
+      <button class="nav-tab" onclick="switchTab('graph',this)">🕸 Knowledge Graph</button>
+      <button class="nav-tab" onclick="switchTab('whiteboard',this)">🖊 Whiteboard</button>
+      <button class="nav-tab" onclick="switchTab('stats',this)">📊 Stats</button>
+    </div>
+    <div class="nav-right">
+      <div class="streak-badge">🔥 <span id="streak-count">0</span> day streak</div>
+      <div class="ollama-pill"><div class="dot-pulse"></div>Ollama</div>
+      <div class="nav-user-btn" onclick="logOut()">
+        <div class="nav-avatar" id="nav-avatar">U</div>
+        <span id="nav-username">User</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Workspace -->
+  <div class="workspace">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div>
+        <div class="sw-label">Difficulty</div>
+        <button class="level-btn" data-level="beginner" onclick="setLevel('beginner')">
+          <div class="ldot"></div>
+          <div class="linfo"><div class="lname">Beginner</div><div class="ldesc">Simple analogies</div></div>
+        </button>
+        <button class="level-btn active" data-level="intermediate" onclick="setLevel('intermediate')">
+          <div class="ldot"></div>
+          <div class="linfo"><div class="lname">Intermediate</div><div class="ldesc">Some depth</div></div>
+        </button>
+        <button class="level-btn" data-level="expert" onclick="setLevel('expert')">
+          <div class="ldot"></div>
+          <div class="linfo"><div class="lname">Expert</div><div class="ldesc">Technical precision</div></div>
+        </button>
+      </div>
+
+      <div>
+        <div class="sw-label">Learning Style</div>
+        <div class="style-bar">
+          <div class="style-row"><span class="style-name">Visual</span><div class="style-track"><div class="style-fill" id="sf-visual" style="width:0%"></div></div><span class="style-val" id="sv-visual">0</span></div>
+          <div class="style-row"><span class="style-name">Analytical</span><div class="style-track"><div class="style-fill" id="sf-analytical" style="width:0%"></div></div><span class="style-val" id="sv-analytical">0</span></div>
+          <div class="style-row"><span class="style-name">Examples</span><div class="style-track"><div class="style-fill" id="sf-example_based" style="width:0%"></div></div><span class="style-val" id="sv-example_based">0</span></div>
+          <div class="style-row"><span class="style-name">Story</span><div class="style-track"><div class="style-fill" id="sf-storytelling" style="width:0%"></div></div><span class="style-val" id="sv-storytelling">0</span></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="sw-label">Knowledge Gaps</div>
+        <div class="gap-list" id="gap-list"><div style="font-size:11px;color:var(--mut);font-family:'DM Mono',monospace;">None detected</div></div>
+      </div>
+
+      <div>
+        <div class="sw-label">Topics Covered</div>
+        <div class="topic-tags" id="topic-tags"><div style="font-size:11px;color:var(--mut);font-family:'DM Mono',monospace;">None yet</div></div>
+      </div>
+
+      <button class="reset-btn" onclick="resetSession()">↺ Reset Session</button>
+    </aside>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- CHAT TAB -->
+      <div class="tab-panel active" id="tab-chat">
+        <div class="chat-area" id="chat-area">
+          <div class="welcome" id="welcome">
+            <span class="welcome-icon">🧠</span>
+            <h2>What do you want to learn?</h2>
+            <p>Ask any concept. I'll explain it at your level, track what you know, detect confusion, and guide your learning path.</p>
+            <div class="chips">
+              <div class="chip" onclick="quickAsk('Linked Lists')">Linked Lists</div>
+              <div class="chip" onclick="quickAsk('Photosynthesis')">Photosynthesis</div>
+              <div class="chip" onclick="quickAsk('Newton Laws')">Newton's Laws</div>
+              <div class="chip" onclick="quickAsk('Binary Search')">Binary Search</div>
+              <div class="chip" onclick="quickAsk('Recursion')">Recursion</div>
+              <div class="chip" onclick="quickAsk('Machine Learning')">Machine Learning</div>
+              <div class="chip" onclick="quickAsk('Quantum Computing')">Quantum Computing</div>
+              <div class="chip" onclick="quickAsk('DNA Replication')">DNA Replication</div>
+            </div>
+          </div>
+        </div>
+        <div class="input-area">
+          <div class="input-wrap">
+            <textarea id="concept-input" rows="1" placeholder="Ask about any concept... or say 'I'm confused about X'" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+            <button class="send-btn" id="send-btn" onclick="sendMessage()">➤</button>
+          </div>
+          <div class="input-hint">Enter to send · Shift+Enter new line</div>
+        </div>
+      </div>
+
+      <!-- QUIZ TAB -->
+      <div class="tab-panel" id="tab-quiz">
+        <div class="quiz-panel">
+          <div class="quiz-header">
+            <input id="quiz-concept" placeholder="Enter concept to quiz on... e.g. Recursion" onkeydown="if(event.key==='Enter')generateQuiz()"/>
+            <button class="btn-primary" id="quiz-btn" onclick="generateQuiz()">Generate Quiz</button>
+          </div>
+          <div id="quiz-content"><div class="quiz-empty">Enter a concept above and click Generate Quiz.<br/>Questions will appear here.</div></div>
+        </div>
+      </div>
+
+      <!-- GRAPH TAB -->
+      <div class="tab-panel" id="tab-graph">
+        <div class="graph-panel">
+          <canvas id="graph-canvas"></canvas>
+          <div class="graph-empty" id="graph-empty">Study some concepts in the Chat tab first.<br/>Your knowledge graph will appear here.</div>
+          <div class="graph-legend">● Studied topic &nbsp; ○ Related (not yet studied)</div>
+        </div>
+      </div>
+
+      <!-- WHITEBOARD TAB -->
+      <div class="tab-panel" id="tab-whiteboard">
+        <div class="whiteboard-panel">
+          <div class="wb-toolbar">
+            <input id="wb-topic" placeholder="Topic label..."/>
+            <textarea id="wb-note-input" style="flex:2;background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px 12px;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;resize:none;height:38px;" placeholder="Write your note..."></textarea>
+            <button class="btn-primary" onclick="addNote()">Add Note</button>
+          </div>
+          <div class="wb-canvas" id="wb-canvas">
+            <div style="width:100%;text-align:center;color:var(--mut);font-size:13px;margin-top:60px;">Your whiteboard is empty.<br/>Add notes above or they'll be auto-added as you study.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STATS TAB -->
+      <div class="tab-panel" id="tab-stats">
+        <div class="stats-panel">
+          <div class="stats-grid">
+            <div class="stat-card"><div class="stat-icon">🔥</div><div class="stat-val" id="st-streak">0</div><div class="stat-lbl">Day Streak</div><div class="stat-sub" id="st-longest">Longest: 0</div></div>
+            <div class="stat-card"><div class="stat-icon">📖</div><div class="stat-val" id="st-topics">0</div><div class="stat-lbl">Topics Covered</div></div>
+            <div class="stat-card"><div class="stat-icon">🧪</div><div class="stat-val" id="st-quizzes">0</div><div class="stat-lbl">Quizzes Taken</div></div>
+            <div class="stat-card"><div class="stat-icon">⚠</div><div class="stat-val" id="st-gaps">0</div><div class="stat-lbl">Knowledge Gaps</div></div>
+            <div class="stat-card"><div class="stat-icon">🎨</div><div class="stat-val" id="st-style">—</div><div class="stat-lbl">Learning Style</div></div>
+            <div class="stat-card"><div class="stat-icon">🖊</div><div class="stat-val" id="st-notes">0</div><div class="stat-lbl">Whiteboard Notes</div></div>
+          </div>
+
+          <div class="section-title">Learning Style Breakdown</div>
+          <div class="style-radar" id="stats-style-radar">
+            <div class="style-radar-row"><span class="sr-name">Visual</span><div class="sr-bar"><div class="sr-fill visual" id="sr-visual" style="width:0%"></div></div><span class="sr-val" id="srv-visual">0</span></div>
+            <div class="style-radar-row"><span class="sr-name">Analytical</span><div class="sr-bar"><div class="sr-fill analytical" id="sr-analytical" style="width:0%"></div></div><span class="sr-val" id="srv-analytical">0</span></div>
+            <div class="style-radar-row"><span class="sr-name">Example-based</span><div class="sr-bar"><div class="sr-fill example_based" id="sr-example_based" style="width:0%"></div></div><span class="sr-val" id="srv-example_based">0</span></div>
+            <div class="style-radar-row"><span class="sr-name">Storytelling</span><div class="sr-bar"><div class="sr-fill storytelling" id="sr-storytelling" style="width:0%"></div></div><span class="sr-val" id="srv-storytelling">0</span></div>
+          </div>
+
+          <div class="section-title">Confusion Tracker</div>
+          <div class="confusion-list" id="confusion-list"><div style="color:var(--mut);font-size:13px;">No confusion detected yet — great work!</div></div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /workspace -->
+</div><!-- /main-app -->
+
+
 <script>
-// ── State ──────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════
+// AUTH LOGIC
+// ══════════════════════════════════════════
+let currentUser = null;
+
+function showLogin() {
+  document.getElementById('view-login').style.display = '';
+  document.getElementById('view-signup').style.display = 'none';
+  document.getElementById('view-success').style.display = 'none';
+  clearAuthErrors();
+}
+
+function showSignup() {
+  document.getElementById('view-login').style.display = 'none';
+  document.getElementById('view-signup').style.display = '';
+  document.getElementById('view-success').style.display = 'none';
+  clearAuthErrors();
+}
+
+function clearAuthErrors() {
+  ['login-err','login-info','signup-err'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.style.display = 'none'; el.textContent = ''; }
+  });
+  ['login-email','login-pw','signup-name','signup-email','signup-pw'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('err');
+  });
+}
+
+function showAuthError(id, msg) {
+  const el = document.getElementById(id);
+  el.textContent = msg; el.style.display = 'block';
+}
+function showAuthInfo(id, msg) {
+  const el = document.getElementById(id);
+  el.textContent = msg; el.style.display = 'block';
+}
+
+function doLogin() {
+  clearAuthErrors();
+  const email = document.getElementById('login-email').value.trim();
+  const pw = document.getElementById('login-pw').value;
+  if (!email) { document.getElementById('login-email').classList.add('err'); showAuthError('login-err','Please enter your email.'); return; }
+  if (!email.includes('@')) { document.getElementById('login-email').classList.add('err'); showAuthError('login-err','Enter a valid email address.'); return; }
+  if (!pw) { document.getElementById('login-pw').classList.add('err'); showAuthError('login-err','Please enter your password.'); return; }
+  if (pw.length < 6) { document.getElementById('login-pw').classList.add('err'); showAuthError('login-err','Password must be at least 6 characters.'); return; }
+  const name = email.split('@')[0].replace(/[._]/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+  showSuccessScreen(name);
+}
+
+function doSignup() {
+  clearAuthErrors();
+  const name = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const pw = document.getElementById('signup-pw').value;
+  if (!name) { document.getElementById('signup-name').classList.add('err'); showAuthError('signup-err','Please enter your name.'); return; }
+  if (!email || !email.includes('@')) { document.getElementById('signup-email').classList.add('err'); showAuthError('signup-err','Enter a valid email address.'); return; }
+  if (pw.length < 6) { document.getElementById('signup-pw').classList.add('err'); showAuthError('signup-err','Password must be at least 6 characters.'); return; }
+  showSuccessScreen(name);
+}
+
+function googleAuth() {
+  showSuccessScreen('Google User');
+}
+
+function forgotPw() {
+  const email = document.getElementById('login-email').value.trim();
+  if (!email || !email.includes('@')) {
+    showAuthError('login-err','Enter your email above first.');
+  } else {
+    showAuthInfo('login-info', `✓ Password reset link sent to ${email}`);
+  }
+}
+
+function checkStrength(pw) {
+  const segs = document.querySelectorAll('.strength-seg');
+  segs.forEach(s => { s.className = 'strength-seg'; });
+  if (!pw) return;
+  let score = 0;
+  if (pw.length >= 6) score++;
+  if (pw.length >= 10) score++;
+  if (/[A-Z]/.test(pw) && /[0-9]/.test(pw)) score++;
+  if (/[^a-zA-Z0-9]/.test(pw)) score++;
+  const cls = score <= 1 ? 'weak' : score <= 2 ? 'medium' : 'strong';
+  for (let i = 0; i < score; i++) segs[i].classList.add(cls);
+}
+
+function showSuccessScreen(name) {
+  currentUser = name;
+  document.getElementById('view-login').style.display = 'none';
+  document.getElementById('view-signup').style.display = 'none';
+  document.getElementById('view-success').style.display = '';
+  const initials = name.split(' ').map(w => w[0] || '').join('').substring(0,2).toUpperCase() || 'U';
+  document.getElementById('success-avatar').textContent = initials;
+  document.getElementById('success-username').textContent = name;
+}
+
+function enterDashboard() {
+  // Update nav with user info
+  const initials = currentUser.split(' ').map(w => w[0] || '').join('').substring(0,2).toUpperCase() || 'U';
+  document.getElementById('nav-avatar').textContent = initials;
+  document.getElementById('nav-username').textContent = currentUser.split(' ')[0];
+
+  // Fade out auth overlay, show main app
+  const overlay = document.getElementById('auth-overlay');
+  overlay.classList.add('hidden');
+  setTimeout(() => {
+    overlay.style.display = 'none';
+    const app = document.getElementById('main-app');
+    app.classList.add('visible');
+  }, 400);
+}
+
+function logOut() {
+  if (!confirm('Log out of StudyBuddy Pro?')) return;
+  currentUser = null;
+  const app = document.getElementById('main-app');
+  app.classList.remove('visible');
+  const overlay = document.getElementById('auth-overlay');
+  overlay.style.display = 'flex';
+  overlay.classList.remove('hidden');
+  showLogin();
+  // Clear fields
+  ['login-email','login-pw','signup-name','signup-email','signup-pw'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.querySelectorAll('.strength-seg').forEach(s => s.className = 'strength-seg');
+}
+
+// ══════════════════════════════════════════
+// MAIN APP LOGIC
+// ══════════════════════════════════════════
 let currentLevel = 'intermediate';
 let isLoading = false;
 let coveredTopics = [];
@@ -358,24 +765,21 @@ let quizAnswers = {};
 let quizCorrect = 0;
 const API = 'http://localhost:5000';
 
-// ── Tab switching ──────────────────────────────────────────────────────────
-function switchTab(name) {
-  document.querySelectorAll('.nav-tab').forEach((t,i) => t.classList.remove('active'));
+function switchTab(name, btnEl) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
-  event.target.classList.add('active');
+  if (btnEl) btnEl.classList.add('active');
   if (name === 'graph') drawGraph();
   if (name === 'stats') loadStats();
 }
 
-// ── Level ──────────────────────────────────────────────────────────────────
 function setLevel(level) {
   currentLevel = level;
   document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
   document.querySelector(`[data-level="${level}"]`).classList.add('active');
 }
 
-// ── Input helpers ──────────────────────────────────────────────────────────
 function autoResize(el) {
   el.style.height = 'auto';
   el.style.height = Math.min(el.scrollHeight, 100) + 'px';
@@ -391,7 +795,6 @@ function scrollBottom() {
   const a = document.getElementById('chat-area'); a.scrollTop = a.scrollHeight;
 }
 
-// ── Send message ───────────────────────────────────────────────────────────
 async function sendMessage() {
   const input = document.getElementById('concept-input');
   const text = input.value.trim();
@@ -404,16 +807,13 @@ async function sendMessage() {
   document.getElementById('send-btn').disabled = true;
   input.value = ''; input.style.height = 'auto';
 
-  // Determine concept — strip "confused about" etc
   const concept = text.replace(/i('m| am) confused (about )?/i,'').trim() || text;
-
   addUserMsg(text, currentLevel);
   const typingEl = addTyping();
 
   try {
     const res = await fetch(`${API}/explain`, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
+      method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ concept, level: currentLevel, user_message: text })
     });
     const data = await res.json();
@@ -422,7 +822,6 @@ async function sendMessage() {
     else {
       addBotMsg(data.answer, currentLevel, data.is_confused, data.is_repeated);
       updateSidebar(data);
-      // Auto-add whiteboard note for new topics
       if (!data.is_repeated) autoWhiteboardNote(concept, data.answer);
     }
   } catch(e) {
@@ -474,32 +873,20 @@ function addBotMsg(answer, level, isConfused, isRepeated) {
   chat.appendChild(d); scrollBottom();
 }
 
-// ── Sidebar update ─────────────────────────────────────────────────────────
 function updateSidebar(data) {
-  // Topics
   coveredTopics = data.covered_topics || [];
   const tt = document.getElementById('topic-tags');
-  if (coveredTopics.length === 0) {
-    tt.innerHTML = '<div style="font-size:11px;color:var(--mut);font-family:\'DM Mono\',monospace;">None yet</div>';
-  } else {
-    tt.innerHTML = coveredTopics.map(t => `<div class="topic-tag new">${escH(t)}</div>`).join('');
-  }
+  tt.innerHTML = coveredTopics.length === 0
+    ? '<div style="font-size:11px;color:var(--mut);font-family:\'DM Mono\',monospace;">None yet</div>'
+    : coveredTopics.map(t => `<div class="topic-tag new">${escH(t)}</div>`).join('');
 
-  // Gaps
   const gaps = data.knowledge_gaps || [];
   const gl = document.getElementById('gap-list');
   gl.innerHTML = gaps.length === 0
     ? '<div style="font-size:11px;color:var(--mut);font-family:\'DM Mono\',monospace;">None detected</div>'
     : gaps.map(g => `<div class="gap-item" onclick="quickAsk('${escH(g)}')" title="Click to study">${escH(g)}</div>`).join('');
 
-  // Streak
-  if (data.streak) {
-    document.getElementById('streak-count').textContent = data.streak.current_streak;
-  }
-
-  // Style scores
-  const scores = data.style_scores || {};
-  // fetch full stats for style
+  if (data.streak) document.getElementById('streak-count').textContent = data.streak.current_streak;
   fetchStyleScores();
 }
 
@@ -520,7 +907,6 @@ async function fetchStyleScores() {
   } catch(e) {}
 }
 
-// ── Quiz ───────────────────────────────────────────────────────────────────
 async function generateQuiz() {
   const concept = document.getElementById('quiz-concept').value.trim();
   if (!concept) return;
@@ -549,9 +935,7 @@ function renderQuiz(questions, concept) {
   }
   let html = '';
   questions.forEach((q, qi) => {
-    html += `<div class="quiz-card" id="qcard-${qi}">
-      <div class="quiz-q">${qi+1}. ${escH(q.question)}</div>
-      <div class="quiz-opts">`;
+    html += `<div class="quiz-card" id="qcard-${qi}"><div class="quiz-q">${qi+1}. ${escH(q.question)}</div><div class="quiz-opts">`;
     (q.options || []).forEach((opt, oi) => {
       html += `<button class="quiz-opt" id="qopt-${qi}-${oi}" onclick="answerQuiz(${qi},${oi},'${escH(opt[0])}','${escH(q.answer)}')">${escH(opt)}</button>`;
     });
@@ -566,16 +950,12 @@ function answerQuiz(qi, oi, chosen, correct) {
   quizAnswers[qi] = chosen;
   const isCorrect = chosen === correct;
   if (isCorrect) quizCorrect++;
-
-  // Mark all options
   document.querySelectorAll(`#qcard-${qi} .quiz-opt`).forEach((btn, i) => {
     btn.disabled = true;
     const letter = btn.textContent.trim()[0];
     if (letter === correct) btn.classList.add('correct');
     else if (i === oi && !isCorrect) btn.classList.add('wrong');
   });
-
-  // Show score if all answered
   const totalQ = document.querySelectorAll('[id^="qcard-"]').length;
   if (Object.keys(quizAnswers).length === totalQ) {
     document.getElementById('quiz-score').textContent =
@@ -583,7 +963,6 @@ function answerQuiz(qi, oi, chosen, correct) {
   }
 }
 
-// ── Knowledge Graph ────────────────────────────────────────────────────────
 async function drawGraph() {
   try {
     const res = await fetch(`${API}/graph`);
@@ -604,7 +983,6 @@ async function drawGraph() {
   const W = canvas.width, H = canvas.height;
   ctx.clearRect(0,0,W,H);
 
-  // Build nodes
   const allTopics = new Set(keys);
   keys.forEach(k => (graphData[k]||[]).forEach(r => allTopics.add(r)));
   const nodes = {};
@@ -613,15 +991,10 @@ async function drawGraph() {
   allTopics.forEach(t => {
     const angle = (i / total) * Math.PI * 2 - Math.PI/2;
     const r = Math.min(W,H) * 0.35;
-    nodes[t] = {
-      x: W/2 + Math.cos(angle)*r,
-      y: H/2 + Math.sin(angle)*r,
-      studied: keys.includes(t)
-    };
+    nodes[t] = { x: W/2 + Math.cos(angle)*r, y: H/2 + Math.sin(angle)*r, studied: keys.includes(t) };
     i++;
   });
 
-  // Draw edges
   keys.forEach(k => {
     (graphData[k]||[]).forEach(related => {
       if (!nodes[related]) return;
@@ -629,21 +1002,17 @@ async function drawGraph() {
       ctx.moveTo(nodes[k].x, nodes[k].y);
       ctx.lineTo(nodes[related].x, nodes[related].y);
       ctx.strokeStyle = 'rgba(124,109,250,0.2)';
-      ctx.lineWidth = 1;
-      ctx.stroke();
+      ctx.lineWidth = 1; ctx.stroke();
     });
   });
 
-  // Draw nodes
   allTopics.forEach(t => {
     const n = nodes[t];
     ctx.beginPath();
     ctx.arc(n.x, n.y, n.studied ? 10 : 6, 0, Math.PI*2);
     ctx.fillStyle = n.studied ? '#7c6dfa' : '#2a2a42';
     ctx.strokeStyle = n.studied ? '#9585fc' : '#3a3a55';
-    ctx.lineWidth = 2;
-    ctx.fill(); ctx.stroke();
-
+    ctx.lineWidth = 2; ctx.fill(); ctx.stroke();
     ctx.fillStyle = n.studied ? '#e8e8f8' : '#6b6b90';
     ctx.font = `${n.studied ? '500' : '400'} 11px "DM Mono"`;
     ctx.textAlign = 'center';
@@ -651,7 +1020,6 @@ async function drawGraph() {
   });
 }
 
-// ── Whiteboard ─────────────────────────────────────────────────────────────
 function autoWhiteboardNote(topic, answer) {
   const firstLine = answer.split('\n')[0].substring(0,120);
   addNoteToUI(topic, firstLine + (answer.length > 120 ? '...' : ''));
@@ -676,23 +1044,17 @@ async function addNote() {
 
 function addNoteToUI(topic, note) {
   const canvas = document.getElementById('wb-canvas');
-  // Remove placeholder
   const placeholder = canvas.querySelector('div[style*="margin-top:60px"]');
   if (placeholder) placeholder.remove();
-
   const id = Date.now();
   const d = document.createElement('div');
   d.className = 'wb-note'; d.id = `note-${id}`;
-  d.innerHTML = `
-    <div class="wb-note-topic">${escH(topic)}</div>
-    <div class="wb-note-text">${escH(note)}</div>
-    <button class="wb-note-del" onclick="document.getElementById('note-${id}').remove()">✕</button>`;
+  d.innerHTML = `<div class="wb-note-topic">${escH(topic)}</div><div class="wb-note-text">${escH(note)}</div><button class="wb-note-del" onclick="document.getElementById('note-${id}').remove();wbNotes.length>0&&wbNotes.pop();document.getElementById('st-notes').textContent=document.querySelectorAll('.wb-note').length;">✕</button>`;
   canvas.appendChild(d);
   wbNotes.push({topic, note});
   document.getElementById('st-notes').textContent = wbNotes.length;
 }
 
-// ── Stats ──────────────────────────────────────────────────────────────────
 async function loadStats() {
   try {
     const res = await fetch(`${API}/stats`);
@@ -727,7 +1089,6 @@ async function loadStats() {
   } catch(e) {}
 }
 
-// ── Reset ──────────────────────────────────────────────────────────────────
 async function resetSession() {
   if (!confirm('Reset entire session? All memory, topics, and progress will be cleared.')) return;
   await fetch(`${API}/reset`, {method:'POST'}).catch(()=>{});
@@ -750,6 +1111,7 @@ async function resetSession() {
   document.getElementById('gap-list').innerHTML = '<div style="font-size:11px;color:var(--mut);font-family:\'DM Mono\',monospace;">None detected</div>';
   document.getElementById('wb-canvas').innerHTML = '<div style="width:100%;text-align:center;color:var(--mut);font-size:13px;margin-top:60px;">Your whiteboard is empty.</div>';
   document.getElementById('streak-count').textContent = '0';
+  document.getElementById('st-notes').textContent = '0';
 }
 </script>
 </body>
