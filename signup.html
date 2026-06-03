@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Sign Up</title>
+
+<style>
+body{
+    background:#07070f;
+    color:white;
+    font-family:Arial;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.box{
+    background:#161625;
+    padding:30px;
+    border-radius:12px;
+    width:350px;
+}
+
+input{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+}
+
+button{
+    width:100%;
+    padding:10px;
+    background:#7c6dfa;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>Sign Up</h2>
+
+<input type="text" id="name" placeholder="Name">
+
+<input type="email" id="email" placeholder="Email">
+
+<input type="password" id="password" placeholder="Password">
+
+<button onclick="signup()">Create Account</button>
+
+<p>
+Already have an account?
+<a href="login.html">Login</a>
+</p>
+
+</div>
+
+<script>
+function signup(){
+
+let user={
+name:document.getElementById("name").value,
+email:document.getElementById("email").value,
+password:document.getElementById("password").value
+};
+
+localStorage.setItem("studybuddyUser",JSON.stringify(user));
+
+alert("Signup Successful!");
+
+window.location.href="login.html";
+}
+</script>
+
+</body>
+</html>
